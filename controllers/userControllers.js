@@ -1,4 +1,5 @@
 const  User = require('../models/userSchema')
+const Teacher = require('../models/teacherSchema')
 const crypto = require('crypto');
 const {sendEmail} = require('../utils/email')
 const bcrypt = require('bcryptjs');
@@ -293,6 +294,8 @@ const loginUser = async (req, res) => {
     // Generate the JWT (access token)
     const payload = {
       email: user.email,
+      name:user.name,
+      interests:user.interests
     };
 
     // Sign the JWT with 1 day validity
@@ -396,4 +399,63 @@ const generateAndSaveOtp = async (user) => {
 };
 
 
-module.exports = {sendEmailOTP,verifyOTP, registerUserDetails,loginUser};
+const fetchFeaturedTeachers = async (req, res) => {
+  try {
+    // Retrieve user details from the middleware (decoded JWT token)
+    const { interests } = req.user;
+
+    let featuredTeachers = [];
+
+    if (interests && interests.length > 0) {
+      // Case 1: Student has interests
+      featuredTeachers = await Teacher.aggregate([
+        {
+          $match: {
+            subjects: {
+              $in: interests.map((interest) => new RegExp(`^${interest}$`, 'i')), // Case-insensitive matching using regex
+            },
+          },
+        },
+        { $sample: { size: 5 } }, // Randomly pick up to 5 teachers from the matched list
+      ]);
+    }
+
+    // Fill the remaining slots with random teachers if needed
+    if (featuredTeachers.length < 5) {
+      const additionalTeachers = await Teacher.aggregate([
+        {
+          $match: {
+            _id: { $nin: featuredTeachers.map((teacher) => teacher._id) }, // Exclude already selected teachers
+          },
+        },
+        { $sample: { size: 5 - featuredTeachers.length } }, // Fetch remaining teachers to make a total of 5
+      ]);
+
+      featuredTeachers = [...featuredTeachers, ...additionalTeachers];
+    }
+
+    // Ensure there are always exactly 5 teachers
+    if (featuredTeachers.length < 5) {
+      const remainingTeachers = await Teacher.find()
+        .limit(5 - featuredTeachers.length) // Fetch remaining teachers to make up for missing entries
+        .lean();
+
+      featuredTeachers = [...featuredTeachers, ...remainingTeachers];
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: 'Featured teachers fetched successfully',
+      data: featuredTeachers.slice(0, 5), // Limit the final array to 5 teachers
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      statusCode: 500,
+      message: 'Server error',
+      data: { error: err.message },
+    });
+  }
+};
+
+module.exports = {sendEmailOTP,verifyOTP, registerUserDetails,loginUser,fetchFeaturedTeachers};
