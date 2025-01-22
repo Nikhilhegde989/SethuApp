@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes')
 
+const multer = require('multer'); // For handling file uploads
+
 dotenv.config();
 connectDB();
 
@@ -16,6 +18,7 @@ app.use('/user', userRoutes);
 app.get('/test', (req, res) => {
   res.send("Testing");
 });
+
 
 const PORT = process.env.PORT || 3000;
 

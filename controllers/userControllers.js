@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const {sendEmail} = require('../utils/email')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { v2: cloudinary } = require('cloudinary');
+
 
 const sendEmailOTP = async (req, res) => {
   const { email } = req.body;
@@ -458,4 +460,131 @@ const fetchFeaturedTeachers = async (req, res) => {
   }
 };
 
-module.exports = {sendEmailOTP,verifyOTP, registerUserDetails,loginUser,fetchFeaturedTeachers};
+const fetchProfileDetails = async (req, res) => {
+  try {
+    // Retrieve the email_id from the middleware (decoded JWT token)
+    const { email } = req.user;
+
+    // Fetch user details from the database using the email
+    const user = await User.findOne({ email }, {
+      name: 1,
+      nickname: 1,
+      collegename: 1,
+      city: 1,
+      mobileNumber: 1,
+      fullAddress: 1,
+      interests: 1,
+      email: 1,
+      profile_pic_url: 1,
+      _id: 0 // Exclude _id field
+    });
+
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        message: 'User not found',
+        data: null
+      });
+    }
+
+    // Respond with user details
+    return res.status(200).json({
+      statusCode: 200,
+      message: 'User profile fetched successfully',
+      data: user
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      statusCode: 500,
+      message: 'Server error',
+      data: { error: err.message }
+    });
+  }
+};
+
+
+
+const updateProfile = async (req, res) => {
+  try {
+    const { email } = req.user; // Email fetched from middleware (JWT)
+    const {
+      full_name,
+      nickname,
+      date_of_birth,
+      phone_number,
+      collegename,
+      interests,
+      gender,
+      city
+    } = req.body;
+
+    const profile_pic = req.file?.path; // File path from multer (uploaded image)
+
+    // Find the user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        statusCode: 404,
+        message: 'User not found',
+        data: null,
+      });
+    }
+
+    const updates = {};
+
+    // Delete old profile picture from Cloudinary if a new picture is uploaded
+    if (profile_pic) {
+      if (user.profile_pic_url) {
+        const oldPublicId = user.profile_pic_url.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(oldPublicId, (err, result) => {
+          if (err) {
+            console.error('Error deleting old profile pic:', err);
+          } else {
+            console.log('Old profile pic deleted successfully:', result);
+          }
+        });
+      }
+
+      // Upload new profile picture to Cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(profile_pic, {
+        folder: 'user_profiles',
+      });
+      updates.profile_pic_url = uploadResponse.secure_url; // Save the new Cloudinary URL
+    }
+
+    // Update fields if provided
+    if (full_name) updates.name = full_name;
+    if (nickname) updates.nickname = nickname;
+    if (date_of_birth) updates.date_of_birth = date_of_birth;
+    if (phone_number) updates.mobileNumber = phone_number;
+    if (collegename) updates.collegename = collegename;
+    if (Array.isArray(interests)) updates.interests = interests;
+    if (gender) updates.gender = gender;
+    if (city) updates.city = city;
+
+    // Update the user in the database
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { $set: updates },
+      { new: true } // Return the updated user
+    );
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: 'Profile updated successfully',
+      data: updatedUser,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      statusCode: 500,
+      message: 'Server error',
+      data: { error: err.message },
+    });
+  }
+};
+
+
+module.exports = {sendEmailOTP,verifyOTP, registerUserDetails,loginUser,fetchFeaturedTeachers,fetchProfileDetails,updateProfile};

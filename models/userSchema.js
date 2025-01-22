@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  nickname:{
+    type: String
+  },
   password: {
     type: String,
   },
@@ -41,6 +44,12 @@ const userSchema = new mongoose.Schema({
   fullyRegistered: {
     type: Boolean,
     default: false, 
+  },
+  profile_pic_url:{
+    type:String
+  },
+  gender:{
+    type:String
   }
 });
 
