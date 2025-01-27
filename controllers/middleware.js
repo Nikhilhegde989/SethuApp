@@ -1,11 +1,15 @@
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
-  // Retrieve the token from the Authorization header
+  // Retrieve the token from the Authorization header or cookies
+  console.log("\n request = ", req)
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+  const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+  const tokenFromCookie = req.cookies?.token; // Check for token in cookies
 
-  if (!token) {
+  const receivedtoken = tokenFromHeader || tokenFromCookie;
+
+  if (!receivedtoken) {
     return res.status(401).json({
       statusCode: 401,
       message: 'Access token is missing',
@@ -15,8 +19,8 @@ const authenticateToken = (req, res, next) => {
 
   try {
     // Verify the token's validity
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log("\n decoded value: ", decoded)
+    const decoded = jwt.verify(receivedtoken, process.env.JWT_SECRET_KEY);
+    console.log('\nDecoded value:', decoded);
 
     // Append the user details from the token payload to the request object
     req.user = {
@@ -44,4 +48,4 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-module.exports = {authenticateToken};
+module.exports = { authenticateToken };

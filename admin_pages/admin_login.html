@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Sethu.org</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Particle Background */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 1;
+    }
+
+    /* Login Container */
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2.5rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-container h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    /* Input Fields */
+    .input-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: #fad0c4; /* Light pink for labels */
+      margin-bottom: 0.5rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff; /* White text for input */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.7); /* Light white placeholder */
+    }
+
+    .input-group input:focus {
+      border-color: #ff9a9e; /* Pink border on focus */
+      box-shadow: 0 0 8px rgba(255, 154, 158, 0.5);
+      outline: none;
+    }
+
+    /* Login Button */
+    .login-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 154, 158, 0.5);
+    }
+
+    /* Error Message */
+    .error-message {
+      color: #ff6b6b; /* Red for error messages */
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #fad0c4; /* Light pink for footer text */
+    }
+
+    .footer a {
+      color: #ff9a9e; /* Pink for links */
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #fad0c4; /* Lighter pink on hover */
+      text-decoration: underline;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
+
+  <!-- Login Container -->
+  <div class="login-container">
+    <h1>Admin Login</h1>
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="login-button">Login</button>
+      <div class="error-message" id="errorMessage">Invalid username or password. Please try again.</div>
+    </form>
+    <div class="footer">
+      <p>Don't have an account? <a href="#">Contact Support</a></p>
+    </div>
+  </div>
+
+  <script>
+  // Initialize Particle Background
+  particlesJS('particles-js', {
+    particles: {
+      number: {
+        value: 80,
+        density: {
+          enable: true,
+          value_area: 800,
+        },
+      },
+      color: {
+        value: '#ffffff',
+      },
+      shape: {
+        type: 'circle',
+      },
+      opacity: {
+        value: 0.5,
+        random: true,
+        anim: {
+          enable: true,
+          speed: 1,
+          opacity_min: 0.1,
+          sync: false,
+        },
+      },
+      size: {
+        value: 3,
+        random: true,
+        anim: {
+          enable: true,
+          speed: 2,
+          size_min: 0.1,
+          sync: false,
+        },
+      },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: '#ffffff',
+        opacity: 0.4,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 2,
+        direction: 'none',
+        random: true,
+        straight: false,
+        out_mode: 'out',
+        bounce: false,
+        attract: {
+          enable: false,
+          rotateX: 600,
+          rotateY: 1200,
+        },
+      },
+    },
+    interactivity: {
+      detect_on: 'canvas',
+      events: {
+        onhover: {
+          enable: true,
+          mode: 'bubble',
+        },
+        onclick: {
+          enable: true,
+          mode: 'push',
+        },
+        resize: true,
+      },
+      modes: {
+        bubble: {
+          distance: 200,
+          size: 6,
+          duration: 2,
+          opacity: 0.8,
+          speed: 3,
+        },
+        push: {
+          particles_nb: 4,
+        },
+      },
+    },
+    retina_detect: true,
+  });
+
+  // Login Form Submission
+  document.getElementById('loginForm').addEventListener('submit', async function (event) {
+  event.preventDefault(); // Prevent form submission
+
+  // Get input values
+  const email = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    // Send login request to the API
+    const response = await fetch('/admin/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      // Login successful
+      window.location.href = data.redirect; // Redirect to /admin/home
+    } else {
+      // Show error message
+      document.getElementById('errorMessage').textContent = data.message || 'Login failed';
+      document.getElementById('errorMessage').style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    document.getElementById('errorMessage').textContent = 'Server error. Please try again later.';
+    document.getElementById('errorMessage').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>

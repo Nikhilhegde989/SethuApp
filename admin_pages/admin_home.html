@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Sethu.org</title>
+ <style>
+  /* General Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Container */
+  .admin-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Header */
+  .admin-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .admin-header h1 {
+    font-size: 2.8rem;
+    color: #2c3e50;
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Navigation */
+  .admin-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  .admin-nav a {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+  }
+
+  .admin-nav a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+  }
+
+  /* Dashboard Overview */
+  .dashboard-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .dashboard-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .dashboard-card h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .dashboard-card p {
+    font-size: 1.6rem;
+    color: #6a11cb;
+    font-weight: 700;
+  }
+
+  /* Tables */
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  .admin-table th {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .admin-table tr:hover {
+    background: #f8f9fa;
+  }
+
+  .admin-table .action-buttons button {
+    padding: 8px 12px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .admin-table .action-buttons .edit-btn {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+  }
+
+  .admin-table .action-buttons .delete-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff4757);
+    color: #fff;
+  }
+
+  .admin-table .action-buttons button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+/* Search Bar */
+.search-bar {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 40px 12px 15px; /* Add padding for the icon */
+  border: 2px solid #6a11cb; /* Blue border by default */
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease;
+  background: #fff; /* White background */
+  color: #333;
+}
+
+.search-bar input:focus {
+  border-color: #6a11cb; /* Keep the blue border */
+  box-shadow: 0 0 8px rgba(106, 17, 203, 0.3); /* Subtle shadow on focus */
+  outline: none;
+}
+
+/* Search Icon */
+.search-bar::after {
+  content: "🔍"; /* Unicode for search icon */
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6a11cb; /* Blue icon */
+  font-size: 1.2rem;
+  pointer-events: none; /* Ensure the icon doesn't interfere with input */
+}
+  /* Section Headings */
+  h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+    color: #6a11cb;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .admin-footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #777;
+    font-size: 0.9rem;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .admin-container {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+</style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Header -->
+    <div class="admin-header">
+      <h1>Admin Panel</h1>
+    </div>
+
+    <!-- Navigation -->
+    <div class="admin-nav">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#users">Users</a>
+      <a href="#posts">Posts</a>
+      <a href="#events">Events</a>
+    </div>
+
+    <!-- Dashboard Overview -->
+    <div id="dashboard">
+      <h2>Dashboard Overview</h2>
+      <div class="dashboard-overview">
+        <div class="dashboard-card">
+          <h2>Total Users</h2>
+          <p>1,234</p>
+        </div>
+        <div class="dashboard-card">
+          <h2>Total Posts</h2>
+          <p>567</p>
+        </div>
+        <div class="dashboard-card">
+          <h2>Total Events</h2>
+          <p>89</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management -->
+    <div id="users" style="display: none;">
+      <h2>User Management</h2>
+      <div class="search-bar">
+        <input type="text" id="userSearch" placeholder="Search users...">
+      </div>
+      <h3>Students</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Dhruv</td>
+            <td>Dhruv@example.com</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Rudra</td>
+            <td>Rudra@example.com</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Teachers</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3</td>
+            <td>Advait</td>
+            <td>Advait@example.com</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Rohan</td>
+            <td>Rohan@example.com</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Post Management -->
+    <div id="posts" style="display: none;">
+      <h2>Post Management</h2>
+      <div class="search-bar">
+        <input type="text" id="postSearch" placeholder="Search posts...">
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Hello everyone!</td>
+            <td>Arjun</td>
+            <td>2025-10-01</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Need help with math.</td>
+            <td>Siddharth </td>
+            <td>2025-10-02</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Event Management -->
+    <div id="events" style="display: none;">
+      <h2>Event Management</h2>
+      <div class="search-bar">
+        <input type="text" id="eventSearch" placeholder="Search events...">
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Organizer</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Math Workshop</td>
+            <td>2025-10-05</td>
+            <td>Vihaan</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Science Fair</td>
+            <td>2025-10-10</td>
+            <td>Aarav</td>
+            <td class="action-buttons">
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="admin-footer">
+      <p>&copy; 2025 Sethu.org. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script>
+    // Show/hide sections based on navigation
+    const sections = {
+      dashboard: document.getElementById('dashboard'),
+      users: document.getElementById('users'),
+      posts: document.getElementById('posts'),
+      events: document.getElementById('events'),
+    };
+
+    const navLinks = document.querySelectorAll('.admin-nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = link.getAttribute('href').substring(1);
+        Object.values(sections).forEach(section => {
+          section.style.display = 'none';
+        });
+        sections[target].style.display = 'block';
+      });
+    });
+
+    // Show dashboard by default
+    sections.dashboard.style.display = 'block';
+
+    // Basic Search Functionality (for demonstration)
+    document.getElementById('userSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#users .admin-table tbody tr');
+      rows.forEach(row => {
+        const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        row.style.display = name.includes(searchTerm) ? '' : 'none';
+      });
+    });
+
+    document.getElementById('postSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#posts .admin-table tbody tr');
+      rows.forEach(row => {
+        const content = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        row.style.display = content.includes(searchTerm) ? '' : 'none';
+      });
+    });
+
+    document.getElementById('eventSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#events .admin-table tbody tr');
+      rows.forEach(row => {
+        const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        row.style.display = title.includes(searchTerm) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
