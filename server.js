@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes')
 const AdminRoutes = require('./routes/adminRoutes')
+const WebinarRoutes = require('./routes/webinarRoutes')
 const cors = require('cors');
 const multer = require('multer'); // For handling file uploads
 const cookieParser = require('cookie-parser');
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bo
 
 app.use('/user', userRoutes);
 app.use('/admin',AdminRoutes)
+app.use('/webinar',WebinarRoutes)
 // Test route
 app.get('/test', (req, res) => {
   res.send("Testing");
