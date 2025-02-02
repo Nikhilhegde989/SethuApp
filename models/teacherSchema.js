@@ -16,22 +16,10 @@ const teacherSchema = new mongoose.Schema({
     type: [String], // Array of strings representing subjects taught
     required: true,
   },
-  posts: [
-    {
-      title: {
-        type: String,
-        required: true,
-      },
-      content: {
-        type: String,
-        required: true,
-      },
-      datePosted: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+    posts: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post"
+    }],
   events: [
     {
       title: {

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
   // Retrieve the token from the Authorization header or cookies
-  console.log("\n request = ", req)
   const authHeader = req.headers['authorization'];
   const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer <token>
   const tokenFromCookie = req.cookies?.token; // Check for token in cookies
@@ -24,9 +23,11 @@ const authenticateToken = (req, res, next) => {
 
     // Append the user details from the token payload to the request object
     req.user = {
+      id: decoded.id,
       email: decoded.email,
       name: decoded.name,
-      interests: decoded.interests || [], // Default to an empty array if interests are not present
+      interests: decoded.interests || [],
+      type: decoded.type, // Default to an empty array if interests are not present
     };
 
     // Proceed to the next middleware/controller

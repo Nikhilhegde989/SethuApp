@@ -3,7 +3,7 @@ const express = require('express');
 const { sendEmailOTP, verifyOTP, registerUserDetails, loginUser,fetchFeaturedTeachers, fetchProfileDetails,updateProfile } = require('../controllers/userControllers');
 const {authenticateToken} = require('../controllers/middleware')
 const router = express.Router();
-const upload = require('../config/multerConfig'); // import multer config
+const {upload} = require('../config/multerConfig'); // import multer config
 
 // Register route
 router.post('/send-email-otp', sendEmailOTP);

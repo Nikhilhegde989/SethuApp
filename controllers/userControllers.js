@@ -268,7 +268,13 @@ const loginUser = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email: email.toLowerCase() });
+    let user = await User.findOne({ email: email.toLowerCase() });
+    let userType = "student"; // Default user type
+
+    if (!user) {
+      user = await Teacher.findOne({ email: email.toLowerCase() });
+      userType = "teacher"; // If found in Teacher collection, change type
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -295,9 +301,11 @@ const loginUser = async (req, res) => {
 
     // Generate the JWT (access token)
     const payload = {
+      id: user._id,
       email: user.email,
       name:user.name,
-      interests:user.interests
+      interests:user.interests,
+      type:userType, 
     };
 
     // Sign the JWT with 1 day validity
