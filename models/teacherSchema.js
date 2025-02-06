@@ -16,7 +16,12 @@ const teacherSchema = new mongoose.Schema({
     type: [String], // Array of strings representing subjects taught
     required: true,
   },
-    posts: [{
+  type: {
+    type: String,
+    enum: ['student', 'teacher'],
+    default: 'teacher', 
+  },
+  posts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post"
     }],

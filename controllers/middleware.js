@@ -29,6 +29,7 @@ const authenticateToken = (req, res, next) => {
       interests: decoded.interests || [],
       type: decoded.type, // Default to an empty array if interests are not present
     };
+    console.log("\n middleware extraction =", req.user)
 
     // Proceed to the next middleware/controller
     next();

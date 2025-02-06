@@ -51,7 +51,12 @@ const userSchema = new mongoose.Schema({
   gender:{
     type:String
   },
-  posts: [{
+  type: {
+    type: String,
+    enum: ['student', 'teacher'],
+    default: 'student', 
+  },
+    posts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Post"
   }]

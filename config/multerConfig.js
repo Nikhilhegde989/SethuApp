@@ -48,4 +48,24 @@ const multerMemory = multer({
   }
 });
 
-module.exports = { upload,multerMemory };
+const chatAttachmentUpload = multer({
+  storage: multer.memoryStorage(), // Use memory storage for Cloudinary
+  limits: { fileSize: 10 * 1024 * 1024 }, // **10MB file size limit**
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/jpg',
+      'video/mp4', 'video/mov', 'video/avi',
+      'application/pdf', 'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Allowed: JPG, PNG, MP4, MOV, AVI, PDF, DOC, DOCX'), false);
+    }
+  }
+});
+
+
+module.exports = { upload,multerMemory,chatAttachmentUpload  };

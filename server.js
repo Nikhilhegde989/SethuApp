@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes')
 const AdminRoutes = require('./routes/adminRoutes')
 const WebinarRoutes = require('./routes/webinarRoutes')
 const postRoutes = require('./routes/postRoutes')
+const chatRoutes = require('./routes/chatRoutes')
 
 const cors = require('cors');
 const multer = require('multer'); // For handling file uploads
@@ -34,6 +35,7 @@ app.use('/user', userRoutes);
 app.use('/admin',AdminRoutes)
 app.use('/webinar',WebinarRoutes)
 app.use('/post',postRoutes)
+app.use('/chat',chatRoutes)
 // Test route
 app.get('/test', (req, res) => {
   res.send("Testing");
